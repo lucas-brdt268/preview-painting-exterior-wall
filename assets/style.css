@@ -1,0 +1,106 @@
+body {
+    font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url('https://www.transparenttextures.com/patterns/washi.png');
+    background-color: #fdfcf8;
+}
+
+h1 {
+    color: #2f2f2f;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 28px;
+    border-bottom: 2px solid #c0a16b;
+    padding-bottom: 10px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    border: 1px solid #e4d6a7;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+input[type="file"],
+input[type="color"],
+select,
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+input[type="color"] {
+    display: none;
+}
+
+button {
+    background-color: #c0a16b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #a88b5a;
+}
+
+.preview {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.preview img {
+    width: 100%;
+    max-width: 48%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fullscreen-btn {
+    margin-top: 20px;
+    background-color: #679267;
+    color: white;
+}
+
+.fullscreen-btn:hover {
+    background-color: #4d7452;
+}
+
+.download-btn {
+    margin-top: 20px;
+    background-color: #dcb36f;
+    color: #333;
+}
+
+.download-btn:hover {
+    background-color: #c9a45a;
+}
