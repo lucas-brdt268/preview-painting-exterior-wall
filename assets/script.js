@@ -6,6 +6,8 @@ const downloadBtn = document.getElementById('downloadBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const colorPicker = document.getElementById('colorPicker');
 const colorNames = document.getElementById('colorNames');
+const submitButton = document.getElementById('submitButton');
+const processingMessage = document.getElementById('processingMessage');
 
 imageUpload.addEventListener('change', (event) => {
     const file = event.target.files[0];
@@ -49,7 +51,7 @@ downloadBtn.addEventListener('click', () => {
     link.click();
 });
 
-document.getElementById('imageForm').addEventListener('submit', (e) => {
+document.getElementById('imageForm').addEventListener('submit', async (e) => {
     /* e.preventDefault();
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -64,4 +66,27 @@ document.getElementById('imageForm').addEventListener('submit', (e) => {
         ctx.fillRect(0, 0, 1024, 1024);
         generatedImage.src = canvas.toDataURL();
     }; */
+    e.preventDefault();
+    const form = e.currentTarget;
+    submitButton.disabled = true;
+    processingMessage.style.display = 'inline';
+    try {
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new FormData(form)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const json = await response.json();
+
+        const imageURl = json.image_url;
+        generatedImage.src = imageURl;
+    } catch (error) {
+        console.error(error);
+        alert('画像の生成に失敗しました。');
+    }
+    submitButton.disabled = false;
+    processingMessage.style.display = 'none';
 });

@@ -1,38 +1,49 @@
 <?php
-require_once "./include/config.php";
 require_once "./include/helpers.php";
+require_once "./include/pngproc.php";
+require_once "./include/imggen.php";
+
+// Ensure the request is a POST request
 only_post();
 
-$apiKey = 'your_openai_api_key_here';  // Replace with your actual API key
+// Upload the original image
+if(!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+    ajax(['error' => 'Image upload failed'], 444);
+}
+$tempName = $_FILES['image']['tmp_name'];
+$fileName = basename($_FILES['image']['name']);
+$fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+$fileSizeKB = $_FILES['image']['size'] / 1024; // Size in KB
+$targetName = $UPLOAD_DIR . uniqid();
+$targetPath = "$targetName.$fileType";
 
-$ch = curl_init();
-
-$data = [
-    "model" => "gpt-4", // Or "gpt-3.5-turbo"
-    "messages" => [
-        ["role" => "system", "content" => "You are a helpful assistant."],
-        ["role" => "user", "content" => "Tell me a joke."]
-    ],
-    "temperature" => 0.7
-];
-
-curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/chat/completions');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'Authorization: Bearer ' . $apiKey
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-$response = curl_exec($ch);
-
-if(curl_errno($ch)){
-    echo 'Curl error: ' . curl_error($ch);
-} else {
-    $result = json_decode($response, true);
-    var_dump($result);
-    echo "Assistant: " . $result['choices'][0]['message']['content'];
+if($fileSizeKB > 2048) { // Limit to 2MB
+    ajax(['error' => 'Image size exceeds the limit of 2MB'], 444);
+}
+if(!move_uploaded_file($tempName, $targetPath)) {
+    ajax(['error' => 'Failed to save uploaded image'], 444);
+}
+if($fileType !== 'png' || !isPngRgba($targetPath)) {
+    // Convert to PNG
+    $oldPath = $targetPath;
+    $targetPath = "$targetName.png";
+    convertToPngRgba($oldPath, $targetPath);
+    unlink($oldPath); // Remove the old file
 }
 
-curl_close($ch);
+// Get the color choice
+$colorName = $_POST['color_name'] ?? '';
+$colorCustom = $_POST['color_custom'] ?? '';
+if($colorName === 'custom'/*  && !empty($colorCustom) */) {
+    $color = $colorCustom;
+} else {
+    $color = $colorName;
+}
+
+// Generate the image
+$imgUrl = imggen($targetPath, $color);
+if($imgUrl) {
+    ajax(['image_url' => $imgUrl]);
+} else {
+    ajax(['error' => 'Image generation failed'], 444);
+}

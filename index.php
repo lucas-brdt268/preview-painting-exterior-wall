@@ -14,15 +14,16 @@
 <body>
     <h1>外壁カラー プレビュー</h1>
     <div class="container">
+        <span id="processingMessage">処理中...</span>
         <form id="imageForm" method="post" action="paint.php">
             <div class="form-group">
                 <label for="imageUpload">画像をアップロード</label>
-                <input type="file" id="imageUpload" accept="image/*" required>
+                <input type="file" id="imageUpload" accept="image/*" required name="image">
             </div>
 
             <div class="form-group">
                 <label for="colorPicker">カラーを選択</label>
-                <select id="colorNames">
+                <select id="colorNames" name="color_name">
                     <option value="#ff0000">赤 (Red)</option>
                     <option value="#00ff00">緑 (Green)</option>
                     <option value="#0000ff">青 (Blue)</option>
@@ -31,10 +32,10 @@
                     <option value="#00ffff">水色 (Cyan)</option>
                     <option value="custom">カスタムカラー</option>
                 </select>
-                <input type="color" id="colorPicker">
+                <input type="color" id="colorPicker" name="color_custom">
             </div>
 
-            <button type="submit">プレビューを生成</button>
+            <button type="submit" id="submitButton">プレビューを生成</button>
         </form>
 
         <div class="preview" id="previewArea">
@@ -44,6 +45,7 @@
 
         <button class="fullscreen-btn" id="fullscreenBtn" style="display: none;">全画面表示</button>
         <button class="download-btn" id="downloadBtn" style="display: none;">ダウンロード</button>
+
     </div>
 
     <script src="<?= asset('script.js') ?>"></script>

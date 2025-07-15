@@ -71,6 +71,12 @@ button:hover {
     background-color: #a88b5a;
 }
 
+button:disabled {
+    background-color: #d8c7a0;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 .preview {
     margin-top: 20px;
     display: flex;
@@ -103,4 +109,11 @@ button:hover {
 
 .download-btn:hover {
     background-color: #c9a45a;
+}
+
+#processingMessage {
+    display: none;
+    margin-top: 15px;
+    color: #a66;
+    font-weight: bold;
 }
