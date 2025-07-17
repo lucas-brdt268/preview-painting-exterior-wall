@@ -84,8 +84,8 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
 
         const json = await response.json();
 
-        const imageURl = json.image_url;
-        generatedImage.src = imageURl;
+        const generated = json.g;
+        generatedImage.src = "data:image/png;base64," + generated;
     } catch (error) {
         console.error(error);
         alert('画像の生成に失敗しました。');

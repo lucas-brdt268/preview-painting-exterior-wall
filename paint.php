@@ -41,9 +41,9 @@ if($colorName === 'custom'/*  && !empty($colorCustom) */) {
 }
 
 // Generate the image
-$imgUrl = imggen($targetPath, $color);
-if($imgUrl) {
-    ajax(['image_url' => $imgUrl]);
+$generated = imggen($targetPath, $color);
+if($generated) {
+    ajax(['g' => $generated]);
 } else {
     ajax(['error' => 'Image generation failed'], 444);
 }
