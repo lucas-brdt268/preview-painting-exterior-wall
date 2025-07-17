@@ -69,6 +69,9 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     submitButton.disabled = true;
+    downloadBtn.disabled = true;
+    fullscreenBtn.disabled = true;
+
     processingMessage.style.display = 'inline';
     try {
         const response = await fetch(form.action, {
@@ -88,5 +91,7 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
         alert('画像の生成に失敗しました。');
     }
     submitButton.disabled = false;
+    downloadBtn.disabled = false;
+    fullscreenBtn.disabled = false;
     processingMessage.style.display = 'none';
 });
