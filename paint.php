@@ -24,9 +24,9 @@ if(!move_uploaded_file($tempName, $targetPath)) {
     ajax(['error' => 'Failed to save uploaded image'], 444);
 }
 if($fileType !== 'png' || !isPngRgba($targetPath)) {
-    // Convert to PNG
+    // Convert to PNG RGBA
     $oldPath = $targetPath;
-    $targetPath = "$targetName.png";
+    $targetPath = "$targetName+converted.png";
     convertToPngRgba($oldPath, $targetPath);
     unlink($oldPath); // Remove the old file
 }
