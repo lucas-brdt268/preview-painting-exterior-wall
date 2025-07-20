@@ -7,12 +7,12 @@ function imggen($imagePath, $color)
 {
     global $apiKey;
 
-    $prompt = "Change the color of the exterior wall to red while keeping everything else unchanged.";
+    $prompt = "Paint the color of the wall with red.";
 
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://api.openai.com/v1/images/edit',
+        CURLOPT_URL => 'https://api.openai.com/v1/images/edits',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => [
