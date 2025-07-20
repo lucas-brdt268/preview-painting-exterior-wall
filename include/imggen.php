@@ -1,11 +1,11 @@
 <?php
 require_once "./include/config.php";
 
-$apiKey = $OPENAI_API_KEY;  // Replace with your actual API key
-
 function imggen($imagePath, $color)
 {
-    global $apiKey;
+    global $OPENAI_API_KEY;
+    
+    $apiKey = $OPENAI_API_KEY;
 
     $prompt = "Change the color of the exterior wall to red while keeping everything else unchanged.";
 
