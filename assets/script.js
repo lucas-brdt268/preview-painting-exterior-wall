@@ -1,3 +1,9 @@
+/**
+ * PaintWall Image Generation Script
+ */
+
+// Get references to HTML elements
+// HTML要素への参照を取得する
 const imageUpload = document.getElementById('imageUpload');
 const originalImage = document.getElementById('originalImage');
 const generatedImage = document.getElementById('generatedImage');
@@ -9,6 +15,8 @@ const colorNames = document.getElementById('colorNames');
 const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
 
+// Add event listeners
+// イベントリスナーを追加する
 imageUpload.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -18,8 +26,6 @@ imageUpload.addEventListener('change', (event) => {
             originalImage.style.display = 'block';
             generatedImage.src = e.target.result;
             generatedImage.style.display = 'block';
-            downloadBtn.style.display = 'inline-block';
-            fullscreenBtn.style.display = 'inline-block';
         };
         reader.readAsDataURL(file);
     }
@@ -71,8 +77,9 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     submitButton.disabled = true;
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
+    downloadBtn.href = '';
 
-    processingMessage.style.display = 'inline';
+    processingMessage.style.visibility = 'visible';
     try {
         const response = await fetch(form.action, {
             method: form.method,
@@ -86,6 +93,7 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
 
         const imageURl = json.image_url;
         generatedImage.src = imageURl;
+        downloadBtn.href = imageURl;
     } catch (error) {
         console.error(error);
         alert('画像の生成に失敗しました。');
@@ -93,5 +101,7 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     submitButton.disabled = false;
     downloadBtn.disabled = false;
     fullscreenBtn.disabled = false;
-    processingMessage.style.display = 'none';
+    processingMessage.style.visibility = 'hidden';
+    downloadBtn.style.display = 'inline-block';
+    fullscreenBtn.style.display = 'inline-block';
 });

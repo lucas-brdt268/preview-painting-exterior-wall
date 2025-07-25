@@ -3,47 +3,62 @@ require_once "./include/helpers.php";
 require_once "./include/pngproc.php";
 require_once "./include/imggen.php";
 
-// Ensure the request is a POST request
-only_post();
+/*
+ * paint.php
+ * 壁の色のシミュレーションのための画像のアップロードと処理を処理します
+ * Handles image uploading and processing for wall color simulation
+ */
 
+// リクエストがPOSTリクエストであることを確認する
+// Check if the request is POST
+onlyPost();
+
+// 元の画像をアップロードする
 // Upload the original image
-if(!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-    ajax(['error' => 'Image upload failed'], 444);
+if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+    resJson(['error' => 'Image upload failed'], 444);
 }
 $tempName = $_FILES['image']['tmp_name'];
 $fileName = basename($_FILES['image']['name']);
 $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-$fileSizeKB = $_FILES['image']['size'] / 1024; // Size in KB
-$targetName = $UPLOAD_DIR . uniqid();
+$fileSizeKB = $_FILES['image']['size'] / 1024; // サイズ（KB), Size in KB
+$fileId = uniqid('img_', true);
+$targetName = $UPLOAD_DIR . $fileId;
 $targetPath = "$targetName.$fileType";
 
-if($fileSizeKB > 2048) { // Limit to 2MB
-    ajax(['error' => 'Image size exceeds the limit of 2MB'], 444);
-}
-if(!move_uploaded_file($tempName, $targetPath)) {
-    ajax(['error' => 'Failed to save uploaded image'], 444);
-}
-if($fileType !== 'png' || !isPngRgba($targetPath)) {
-    // Convert to PNG RGBA
-    $oldPath = $targetPath;
-    $targetPath = "$targetName+converted.png";
-    convertToPngRgba($oldPath, $targetPath);
-    unlink($oldPath); // Remove the old file
+if ($fileSizeKB > 5120) { // 5MBまでに制限, Limit to 5MB
+    resJson(['error' => 'Image size exceeds the limit of 2MB'], 444);
 }
 
-// Get the color choice
+checkDir($UPLOAD_DIR);
+if (!move_uploaded_file($tempName, $targetPath)) {
+    resJson(['error' => 'Failed to save uploaded image'], 444);
+}
+
+// フォームから色を取得する
+// Get the color from the form
 $colorName = $_POST['color_name'] ?? '';
 $colorCustom = $_POST['color_custom'] ?? '';
-if($colorName === 'custom'/*  && !empty($colorCustom) */) {
+if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
     $color = $colorCustom;
 } else {
     $color = $colorName;
 }
 
-// Generate the image
+// 画像を生成する
+// Generate an image
 $imgUrl = imggen($targetPath, $color);
-if($imgUrl) {
-    ajax(['image_url' => $imgUrl]);
-} else {
-    ajax(['error' => 'Image generation failed'], 444);
+if (!$imgUrl) {
+    resJson(['error' => 'Image generation failed'], 444);
 }
+
+// 画像の保存
+// Save the image
+$fileName = $fileId . '.jpg';
+$imageData = file_get_contents($imgUrl);
+checkDir($OUTPUT_DIR);
+file_put_contents($OUTPUT_DIR . $fileName, $imageData);
+
+// 画像のURLを返す
+// Return the image URL
+resJson(['image_url' => $imgUrl]);
