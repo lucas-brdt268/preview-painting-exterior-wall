@@ -54,11 +54,11 @@ if (!$imgUrl) {
 
 // 画像の保存
 // Save the image
-$fileName = $fileId . '.jpg';
+$savePath = $OUTPUT_DIR . $fileId . '.jpg';
 $imageData = file_get_contents($imgUrl);
 checkDir($OUTPUT_DIR);
-file_put_contents($OUTPUT_DIR . $fileName, $imageData);
+file_put_contents($savePath, $imageData);
 
 // 画像のURLを返す
 // Return the image URL
-resJson(['image_url' => $imgUrl]);
+resJson(['image_url' => $imgUrl, 'download_url' => "$BASE_URL/$savePath"]);

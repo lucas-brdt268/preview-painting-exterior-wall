@@ -44,7 +44,7 @@ function imggen($imagePath, $color)
 
     $curl = curl_init();
     curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://api.replicate.com/v1/models/black-forest-labs/flux-kontext-max/predictions',
+        CURLOPT_URL => 'https://api.replicate.com/v1/models/black-forest-labs/flux-kontext-pro/predictions',
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => [
             "Authorization: Bearer $apiKey",

@@ -1,5 +1,5 @@
-<?php 
-require_once "./include/helpers.php" 
+<?php
+require_once "./include/helpers.php"
 
 /**
  * index.php
@@ -27,11 +27,16 @@ require_once "./include/helpers.php"
 <body>
     <h1>外壁カラー プレビュー</h1>
 
+    <div class="block-cover" id="processingMessage">
+        <span>処理中...</span>
+    </div>
+
     <!-- Begin: Container -->
     <div class="container">
 
-        <div class="block-cover" id="processingMessage">
-            <span>処理中...</span>
+        <div id="alert" class="alert fade-in">
+            <span id="alertText"></span>
+            <button class="close-btn" onclick="closeAlert()">&times;</button>
         </div>
 
         <!-- Begin: Image upload form -->
@@ -48,7 +53,7 @@ require_once "./include/helpers.php"
             <div class="form-group">
                 <label for="colorPicker">カラーを選択</label>
                 <!-- Color name select -->
-                <select id="colorNames" name="color_name">
+                <select id="colorName" name="color_name">
                     <option value="red">赤 (Red)</option>
                     <option value="green">緑 (Green)</option>
                     <option value="light green">薄緑 (Light Green)</option>
@@ -56,7 +61,7 @@ require_once "./include/helpers.php"
                     <option value="yellow">黄 (Yellow)</option>
                     <option value="magenta">紫 (Magenta)</option>
                     <option value="cyan">水色 (Cyan)</option>
-                    <option value="custom">カスタムカラー</option>
+                    <!-- <option value="custom">カスタムカラー</option> -->
                 </select>
                 <!-- Custom color picker -->
                 <input type="color" id="colorPicker" name="color_custom">
@@ -73,6 +78,7 @@ require_once "./include/helpers.php"
             <img id="originalImage" src="" alt="元画像" style="display: none;">
             <img id="generatedImage" src="" alt="プレビュー画像" style="display: none;">
         </div>
+        <div id="processTime" style="display: none;">処理時間: 0s</div>
         <!-- End: Preview area with original -->
 
         <!-- Begin: Buttons -->
@@ -83,6 +89,7 @@ require_once "./include/helpers.php"
     <!-- End: Container -->
 
     <!-- Begin: Scripts -->
+    <!-- <script type="text/javascript" src="https://chir.ag/projects/ntc/ntc.js"></script> -->
     <script src="<?= asset('script.js') ?>"></script>
     <!-- End: Scripts -->
 </body>

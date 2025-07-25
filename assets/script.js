@@ -11,9 +11,10 @@ const previewArea = document.getElementById('previewArea');
 const downloadBtn = document.getElementById('downloadBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const colorPicker = document.getElementById('colorPicker');
-const colorNames = document.getElementById('colorNames');
+const colorName = document.getElementById('colorName');
 const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
+const processTime = document.getElementById('processTime');
 
 // Add event listeners
 // イベントリスナーを追加する
@@ -31,7 +32,7 @@ imageUpload.addEventListener('change', (event) => {
     }
 });
 
-colorNames.addEventListener('change', (event) => {
+colorName.addEventListener('change', (event) => {
     if (event.target.value === 'custom') {
         colorPicker.style.display = 'block';
     } else {
@@ -50,58 +51,74 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-downloadBtn.addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.href = generatedImage.src;
-    link.download = 'generated-image.png';
-    link.click();
-});
-
 document.getElementById('imageForm').addEventListener('submit', async (e) => {
-    /* e.preventDefault();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.src = originalImage.src;
-    img.onload = () => {
-        canvas.width = 1024;
-        canvas.height = 1024;
-        ctx.drawImage(img, 0, 0, 1024, 1024);
-        ctx.fillStyle = colorPicker.value;
-        ctx.globalAlpha = 0.5;
-        ctx.fillRect(0, 0, 1024, 1024);
-        generatedImage.src = canvas.toDataURL();
-    }; */
     e.preventDefault();
+
+    if (!imageUpload.files.length) {
+        showAlert('画像をアップロードしてください。');
+        return;
+    };
+
     const form = e.currentTarget;
+    
     submitButton.disabled = true;
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
+    downloadBtn.style.display = 'inline-block';
+    fullscreenBtn.style.display = 'inline-block';
     downloadBtn.href = '';
-
     processingMessage.style.visibility = 'visible';
+    processTime.style.display = 'block';
+    processTime.innerText = '処理中...';
+
+    const formData = new FormData(form);
+    /* let colorName = form.elements.colorName.value;
+    const colorHex = form.elements.colorPicker.value;
+    if(colorName === 'custom') {
+        colorName = ntc.name(colorHex)[1];
+    }
+    formData.set('color_name', colorName);
+    formData.delete('color_custom'); */
+
+    const beginTime = Date.now();
     try {
         const response = await fetch(form.action, {
             method: form.method,
-            body: new FormData(form)
+            body: formData
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
+        processTime.innerText = `処理時間: ${(Date.now() - beginTime) / 1000}s`;
+        
         const json = await response.json();
 
         const imageURl = json.image_url;
+        const downloadUrl = json.download_url;
         generatedImage.src = imageURl;
-        downloadBtn.href = imageURl;
+        downloadBtn.href = downloadUrl;
+        downloadBtn.disabled = false;
+        fullscreenBtn.disabled = false;
     } catch (error) {
+        showAlert('画像の生成に失敗しました。');
+        processTime.innerText = '画像の生成に失敗しました。';
+
         console.error(error);
-        alert('画像の生成に失敗しました。');
     }
     submitButton.disabled = false;
-    downloadBtn.disabled = false;
-    fullscreenBtn.disabled = false;
     processingMessage.style.visibility = 'hidden';
-    downloadBtn.style.display = 'inline-block';
-    fullscreenBtn.style.display = 'inline-block';
 });
+
+// Alert
+// アラートの表示と非表示
+function showAlert(text) {
+    document.getElementById("alertText").innerText = text;
+    document.getElementById("alert").classList.add("show");
+}
+
+function closeAlert() {
+    document.getElementById("alertText").innerText = '';
+    document.getElementById("alert").classList.remove("show");
+}
+
