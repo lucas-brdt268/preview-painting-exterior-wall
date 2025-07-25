@@ -1,4 +1,4 @@
 include/config.php
 uploads/*
-outputs/*
+output/*
 logs/*
