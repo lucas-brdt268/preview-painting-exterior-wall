@@ -3,5 +3,5 @@ Options -Indexes
 #ErrorDocument 404 /404.php
 
 RewriteEngine On
-RewriteRule ^include/ - [F]
-RewriteRule ^logs/ - [F]
+RewriteRule ^include(/|$) - [F,NC]
+RewriteRule ^logs(/|$) - [F,NC]

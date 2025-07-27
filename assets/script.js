@@ -52,9 +52,13 @@ fullscreenBtn.addEventListener('click', () => {
 });
 
 downloadBtn.addEventListener('click', () => {
+    let downloadName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
+    downloadName += `_${colorName.value === 'custom' ? colorPicker.value : colorName.value}-color`;
+    downloadName += `_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.jpg`;
+
     const link = document.createElement('a');
     link.href = generatedImage.src;
-    link.download = 'paintwall_image.jpg';
+    link.download = downloadName;
     link.click();
 });
 
@@ -78,6 +82,7 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     downloadBtn.href = '';
     processTime.style.display = 'block';
     processTime.innerText = '処理中...';
+    closeAlert();
 
     const formData = new FormData(form);
     /* let colorName = form.elements.colorName.value;

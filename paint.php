@@ -14,9 +14,11 @@ require_once "./include/colorname.php";
 // Check if the request is POST
 onlyPost();
 
+trace("Start handling request");
 // 元の画像をアップロードする
 // Upload the original image
 if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+    trace('444Error: Image upload failed');
     resJson(['error' => 'Image upload failed'], 444);
 }
 $tempName = $_FILES['image']['tmp_name'];
@@ -28,11 +30,13 @@ $targetName = $UPLOAD_DIR . $fileId;
 $targetPath = "$targetName.$fileType";
 
 if ($fileSizeKB > 5120) { // 5MBまでに制限, Limit to 5MB
+    trace('444Error: Image size exceeds the limit of 2MB');
     resJson(['error' => 'Image size exceeds the limit of 2MB'], 444);
 }
 
 checkDir($UPLOAD_DIR);
 if (!move_uploaded_file($tempName, $targetPath)) {
+    trace('444Error: Failed to save uploaded image');
     resJson(['error' => 'Failed to save uploaded image'], 444);
 }
 trace("File id: $fileId");
@@ -53,6 +57,7 @@ trace("Gotten color name: $color");
 // Generate an image
 $imgUrl = imggen($targetPath, $color);
 if (!$imgUrl) {
+    trace('444Error: Image generation failed');
     resJson(['error' => 'Image generation failed'], 444);
 }
 
@@ -63,7 +68,7 @@ $imageData = file_get_contents($imgUrl);
 checkDir($OUTPUT_DIR);
 file_put_contents($savePath, $imageData);
 
-trace("\n");
+trace("End handling request\n");
 
 // 画像のURLを返す
 // Return the image URL
