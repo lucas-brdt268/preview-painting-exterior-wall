@@ -25,7 +25,7 @@ imageUpload.addEventListener('change', (event) => {
         reader.onload = (e) => {
             originalImage.src = e.target.result;
             originalImage.style.display = 'block';
-            generatedImage.src = e.target.result;
+            generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
             generatedImage.style.display = 'block';
         };
         reader.readAsDataURL(file);
@@ -51,6 +51,13 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
+downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = generatedImage.src;
+    link.download = 'paintwall_image.jpg';
+    link.click();
+});
+
 document.getElementById('imageForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -62,12 +69,13 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     const form = e.currentTarget;
     
     submitButton.disabled = true;
+    processingMessage.style.visibility = 'visible';
+    generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
     downloadBtn.style.display = 'inline-block';
     fullscreenBtn.style.display = 'inline-block';
     downloadBtn.href = '';
-    processingMessage.style.visibility = 'visible';
     processTime.style.display = 'block';
     processTime.innerText = '処理中...';
 
@@ -96,8 +104,12 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
 
         const imageURl = json.image_url;
         const downloadUrl = json.download_url;
-        generatedImage.src = imageURl;
-        downloadBtn.href = downloadUrl;
+        const base64Image = json.base64_image;
+        // generatedImage.src = imageURl;
+        // downloadBtn.href = downloadUrl;
+        const base64ImageUrl = `data:image/jpg;base64,${base64Image}`;
+        generatedImage.src = base64ImageUrl;
+
         downloadBtn.disabled = false;
         fullscreenBtn.disabled = false;
     } catch (error) {

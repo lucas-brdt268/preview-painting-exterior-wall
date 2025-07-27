@@ -83,13 +83,16 @@ require_once "./include/helpers.php"
 
         <!-- Begin: Buttons -->
         <button class="btn fullscreen-btn" id="fullscreenBtn" style="display: none;">全画面表示</button>
-        <a class="btn download-btn" id="downloadBtn" style="display: none;" download>ダウンロード</a>
+        <button class="btn download-btn" id="downloadBtn" style="display: none;">ダウンロード</button>
         <!-- End: Buttons -->
     </div>
     <!-- End: Container -->
 
     <!-- Begin: Scripts -->
     <!-- <script type="text/javascript" src="https://chir.ag/projects/ntc/ntc.js"></script> -->
+    <script>
+        const ASSET_URL = '<?= asset('') ?>';
+    </script>
     <script src="<?= asset('script.js') ?>"></script>
     <!-- End: Scripts -->
 </body>

@@ -23,7 +23,7 @@ $tempName = $_FILES['image']['tmp_name'];
 $fileName = basename($_FILES['image']['name']);
 $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 $fileSizeKB = $_FILES['image']['size'] / 1024; // サイズ（KB), Size in KB
-$fileId = uniqid('img_', true);
+$fileId = uniqid('img_');
 $targetName = $UPLOAD_DIR . $fileId;
 $targetPath = "$targetName.$fileType";
 
@@ -35,16 +35,19 @@ checkDir($UPLOAD_DIR);
 if (!move_uploaded_file($tempName, $targetPath)) {
     resJson(['error' => 'Failed to save uploaded image'], 444);
 }
+trace("File id: $fileId");
 
 // フォームから色を取得する
 // Get the color from the form
 $colorName = $_POST['color_name'] ?? '';
 $colorCustom = $_POST['color_custom'] ?? '';
+trace("Color name: $colorName, Custom color: $colorCustom");
 if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
     $color = colorName($colorCustom) ?? "white";
 } else {
     $color = $colorName;
 }
+trace("Gotten color name: $color");
 
 // 画像を生成する
 // Generate an image
@@ -60,6 +63,9 @@ $imageData = file_get_contents($imgUrl);
 checkDir($OUTPUT_DIR);
 file_put_contents($savePath, $imageData);
 
+trace("\n");
+
 // 画像のURLを返す
 // Return the image URL
-resJson(['image_url' => $imgUrl, 'download_url' => "$BASE_URL/$savePath"]);
+$base64Image = base64_encode($imageData);
+resJson(['image_url' => $imgUrl, 'download_url' => "$BASE_URL/$savePath", 'base64_image' => $base64Image]);

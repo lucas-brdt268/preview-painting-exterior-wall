@@ -86,9 +86,13 @@ function asset($path)
  */
 function trace($message)
 {
-    $logFile = __DIR__ . '/logs/app.log';
+    global $LOG_DIR;
+
+    checkDir($LOG_DIR);
+    $date = date('Ymd');
+    $logFile = $LOG_DIR . "log_$date.txt";
     $timestamp = date('Y-m-d H:i:s');
-    $logMessage = "[$timestamp] $message" . PHP_EOL;
+    $logMessage = "[$timestamp]>> $message" . PHP_EOL;
     
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }

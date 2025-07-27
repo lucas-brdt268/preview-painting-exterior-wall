@@ -4,3 +4,4 @@ Options -Indexes
 
 RewriteEngine On
 RewriteRule ^include/ - [F]
+RewriteRule ^logs/ - [F]

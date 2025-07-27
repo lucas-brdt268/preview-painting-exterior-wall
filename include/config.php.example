@@ -1,5 +1,6 @@
 <?php
 $BASE_URL = "http://localhost";
 $REPLICATE_API_KEY = "your_replicate_api_key";
-$UPLOAD_DIR = "uploads";
-$OUTPUT_DIR = "outputs";
+$UPLOAD_DIR = "./uploads";
+$OUTPUT_DIR = "./output";
+$LOG_DIR = './logs/';
