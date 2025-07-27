@@ -61,7 +61,7 @@ require_once "./include/helpers.php"
                     <option value="yellow">黄 (Yellow)</option>
                     <option value="magenta">紫 (Magenta)</option>
                     <option value="cyan">水色 (Cyan)</option>
-                    <!-- <option value="custom">カスタムカラー</option> -->
+                    <option value="custom">カスタムカラー</option>
                 </select>
                 <!-- Custom color picker -->
                 <input type="color" id="colorPicker" name="color_custom">

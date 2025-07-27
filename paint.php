@@ -2,6 +2,7 @@
 require_once "./include/helpers.php";
 require_once "./include/pngproc.php";
 require_once "./include/imggen.php";
+require_once "./include/colorname.php";
 
 /*
  * paint.php
@@ -40,7 +41,7 @@ if (!move_uploaded_file($tempName, $targetPath)) {
 $colorName = $_POST['color_name'] ?? '';
 $colorCustom = $_POST['color_custom'] ?? '';
 if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
-    $color = $colorCustom;
+    $color = colorName($colorCustom) ?? "white";
 } else {
     $color = $colorName;
 }

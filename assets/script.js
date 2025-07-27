@@ -2,8 +2,8 @@
  * PaintWall Image Generation Script
  */
 
-// Get references to HTML elements
 // HTML要素への参照を取得する
+// Get references to HTML elements
 const imageUpload = document.getElementById('imageUpload');
 const originalImage = document.getElementById('originalImage');
 const generatedImage = document.getElementById('generatedImage');
@@ -16,8 +16,8 @@ const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
 const processTime = document.getElementById('processTime');
 
-// Add event listeners
 // イベントリスナーを追加する
+// Add event listeners
 imageUpload.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -110,8 +110,8 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     processingMessage.style.visibility = 'hidden';
 });
 
-// Alert
 // アラートの表示と非表示
+// Alert
 function showAlert(text) {
     document.getElementById("alertText").innerText = text;
     document.getElementById("alert").classList.add("show");
