@@ -14,13 +14,12 @@ require_once "./include/config.php";
  *
  * @param string $imagePath Path to the input image.
  * @param string $color The color to modify the exterior wall to.
- * @return string|null URL of the generated image or null on failure.
+ * @return string URL of the generated image.
  */
 function imggen($imagePath, $color)
 {
     //
     global $REPLICATE_API_KEY;
-    global $OUTPUT_DIR;
 
     // 入力画像を準備する  
     // Prepare the input image
@@ -30,7 +29,7 @@ function imggen($imagePath, $color)
     // Replicate API への CURL リクエスト
     // CURL Request to Replicate API
     $apiKey = $REPLICATE_API_KEY;
-    $prompt = "Modify only the exterior wall color of the house to $color color.";
+    $prompt = "Modify only the exterior wall color of the house to the $color color'.";
 
     $data = [
         'input' => [
@@ -52,6 +51,8 @@ function imggen($imagePath, $color)
         ],
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_CONNECTTIMEOUT => 10,
     ]);
     $response = curl_exec($curl);
     $err = curl_error($curl);
@@ -60,7 +61,7 @@ function imggen($imagePath, $color)
     // CURL エラーハンドリング
     // CURL error handling
     if ($err) {
-        resJson(['error' => "cURL Error: $err"], 444);
+        throw new Exception("cURL Error: $err");
     }
 
     // レスポンスをパース
@@ -87,7 +88,7 @@ function pollRequestLoop($predictionId)
         if ($result['status'] === 'succeeded') {
             return $result['output'];
         } elseif ($result['status'] === 'failed') {
-            resJson(['error' => "Prediction failed: {$result['error']}"], 444);
+            throw new Exception("Prediction failed: {$result['error']}");
         }
     } while ($result['status'] !== 'succeeded' && $result['status'] !== 'failed');
 }
@@ -111,6 +112,8 @@ function pollRequestOnce($predictionId)
             "Content-Type: application/json",
         ],
         CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_CONNECTTIMEOUT => 5,
     ]);
 
     $response = curl_exec($curl);
@@ -118,7 +121,7 @@ function pollRequestOnce($predictionId)
     curl_close($curl);
 
     if ($err) {
-        resJson(['error' => "cURL Error: $err"], 444);
+        throw new Exception("cURL Error: $err");
     }
 
     return json_decode($response, true);

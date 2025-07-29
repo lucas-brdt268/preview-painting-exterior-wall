@@ -5,3 +5,5 @@ Options -Indexes
 RewriteEngine On
 RewriteRule ^include(/|$) - [F,NC]
 RewriteRule ^logs(/|$) - [F,NC]
+RewriteRule ^uploads(/|$) - [F,NC]
+RewriteRule ^output(/|$) - [F,NC]

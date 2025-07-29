@@ -10,6 +10,10 @@ require_once "./include/colorname.php";
  * Handles image uploading and processing for wall color simulation
  */
 
+// スクリプトの実行時間を60秒に設定
+// Set script execution time to 60 seconds
+set_time_limit(60);
+
 // リクエストがPOSTリクエストであることを確認する
 // Check if the request is POST
 onlyPost();
@@ -18,8 +22,8 @@ trace("Start handling request");
 // 元の画像をアップロードする
 // Upload the original image
 if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-    trace('444Error: Image upload failed');
-    resJson(['error' => 'Image upload failed'], 444);
+    trace('Error(444): Image upload failed');
+    resJson(['error' => '画像のアップロードに失敗しました'], 444);
 }
 $tempName = $_FILES['image']['tmp_name'];
 $fileName = basename($_FILES['image']['name']);
@@ -30,14 +34,14 @@ $targetName = $UPLOAD_DIR . $fileId;
 $targetPath = "$targetName.$fileType";
 
 if ($fileSizeKB > 5120) { // 5MBまでに制限, Limit to 5MB
-    trace('444Error: Image size exceeds the limit of 2MB');
-    resJson(['error' => 'Image size exceeds the limit of 2MB'], 444);
+    trace('Error(444): Image size exceeds the limit of 5MB');
+    resJson(['error' => '画像サイズが5MBの制限を超えています'], 444);
 }
 
 checkDir($UPLOAD_DIR);
 if (!move_uploaded_file($tempName, $targetPath)) {
-    trace('444Error: Failed to save uploaded image');
-    resJson(['error' => 'Failed to save uploaded image'], 444);
+    trace('Error(444): Failed to save uploaded image');
+    resJson(['error' => 'アップロードした画像を保存できませんでした'], 444);
 }
 trace("File id: $fileId");
 
@@ -47,7 +51,12 @@ $colorName = $_POST['color_name'] ?? '';
 $colorCustom = $_POST['color_custom'] ?? '';
 trace("Color name: $colorName, Custom color: $colorCustom");
 if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
-    $color = colorName($colorCustom) ?? "white";
+    try{
+        $color = colorName($colorCustom) ?? "white";
+    } catch (Exception $e) {
+        trace('Error(444): ' . $e->getMessage());
+        resJson(['error' => '色分析中にエラーが発生しました。'], 444);
+    }
 } else {
     $color = $colorName;
 }
@@ -55,10 +64,11 @@ trace("Gotten color name: $color");
 
 // 画像を生成する
 // Generate an image
-$imgUrl = imggen($targetPath, $color);
-if (!$imgUrl) {
-    trace('444Error: Image generation failed');
-    resJson(['error' => 'Image generation failed'], 444);
+try{
+    $imgUrl = imggen($targetPath, $color);
+} catch (Exception $e) {
+    trace('Error(444): ' . $e->getMessage());
+    resJson(['error' => '画像の生成中にエラーが発生しました。'], 444);
 }
 
 // 画像の保存
@@ -66,7 +76,11 @@ if (!$imgUrl) {
 $savePath = $OUTPUT_DIR . $fileId . '.jpg';
 $imageData = file_get_contents($imgUrl);
 checkDir($OUTPUT_DIR);
-file_put_contents($savePath, $imageData);
+try{
+    file_put_contents($savePath, $imageData);
+} catch (Exception $e) {
+    trace('Error: ' . $e->getMessage());
+}
 
 trace("End handling request\n");
 
