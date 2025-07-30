@@ -49,6 +49,9 @@ label {
     margin-bottom: 8px;
     font-weight: bold;
     color: #4a4a4a;
+    background-color: #f3f3f3;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 input[type="file"],
@@ -115,24 +118,26 @@ input[type="color"] {
     color: #e4e4e4
 }
 
-/*** Fullscreen Button ***/
+/*** Help Buttons ****/
+.help-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 .fullscreen-btn {
     margin-top: 20px;
     background-color: #679267;
     color: white;
 }
-
 .fullscreen-btn:hover {
     background-color: #4d7452;
 }
 
-/*** Download Button ***/
 .download-btn {
     margin-top: 20px;
     background-color: #dcb36f;
     color: #333;
 }
-
 .download-btn:hover {
     background-color: #c9a45a;
 }
@@ -157,14 +162,14 @@ input[type="color"] {
 
 /*** Alert ***/
 .alert {
-    padding: 16px 24px;
-    background-color: #f44336;
-    color: white;
+    padding: 10px 24px;
+    color: #f44336;
+    border: 1px solid #f44336;
     border-radius: 8px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     position: relative;
     display: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
 }
 
 .alert.show {
@@ -173,11 +178,11 @@ input[type="color"] {
 
 .alert .close-btn {
     position: absolute;
-    top: 12px;
+    top: 11px;
     right: 16px;
     background: none;
     border: none;
-    color: white;
+    color: #f44336;
     font-size: 20px;
     cursor: pointer;
 }
@@ -188,5 +193,63 @@ input[type="color"] {
 }
 
 .fade-in {
-  animation: fadeIn 1s;
+  animation: fadeIn 0.4s;
+}
+
+/*** File Upload ***/
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: Meiryo, sans-serif;
+}
+
+#fileUploadBtn {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#fileUploadBtn:hover {
+  background-color: #f0f0f0;
+}
+
+#fileName {
+  font-size: 14px;
+  color: #555;
+}
+
+/*** Color List ***/
+.color-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    overflow-y: scroll;
+    border: 1px solid hwb(0 80% 20%);
+    background-color: #fafafa;
+    height: 300px;
+}
+.color-item-wrap {
+    flex: 1 1 12.5%;
+}
+.color-item{
+    background-color: #fff;
+    padding: 8px;
+    margin: 5px;
+    height: 60px;
+    text-align: right;
+    vertical-align: bottom;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    user-select: none;
+}
+.color-item.selected {
+    border: 4px solid rgb(255, 230, 0);
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(102, 102, 102, 0.5);
 }

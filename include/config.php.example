@@ -4,3 +4,4 @@ $REPLICATE_API_KEY = "your_replicate_api_key";
 $UPLOAD_DIR = "./uploads";
 $OUTPUT_DIR = "./output";
 $LOG_DIR = './logs/';
+$CSV_DIR = './csv/';

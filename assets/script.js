@@ -4,23 +4,33 @@
 
 // HTML要素への参照を取得する
 // Get references to HTML elements
+const imageForm = document.getElementById('imageForm');
 const imageUpload = document.getElementById('imageUpload');
+const fileUploadBtn = document.getElementById('fileUploadBtn');
+const fileName = document.getElementById('fileName');
 const originalImage = document.getElementById('originalImage');
 const generatedImage = document.getElementById('generatedImage');
 const previewArea = document.getElementById('previewArea');
+const helpButtons = document.getElementById('helpButtons');
 const downloadBtn = document.getElementById('downloadBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const colorPicker = document.getElementById('colorPicker');
-const colorName = document.getElementById('colorName');
+// const colorName = document.getElementById('colorName');
 const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
 const processTime = document.getElementById('processTime');
 
 // イベントリスナーを追加する
 // Add event listeners
+fileUploadBtn.addEventListener('click', () => {
+    imageUpload.click();
+});
+
 imageUpload.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
+        fileName.textContent = file.name;
+
         const reader = new FileReader();
         reader.onload = (e) => {
             originalImage.src = e.target.result;
@@ -32,14 +42,14 @@ imageUpload.addEventListener('change', (event) => {
     }
 });
 
-colorName.addEventListener('change', (event) => {
+/* colorName.addEventListener('change', (event) => {
     if (event.target.value === 'custom') {
         colorPicker.style.display = 'block';
     } else {
         colorPicker.style.display = 'none';
         colorPicker.value = event.target.value;
     }
-});
+}); */
 
 fullscreenBtn.addEventListener('click', () => {
     if (generatedImage.requestFullscreen) {
@@ -53,7 +63,7 @@ fullscreenBtn.addEventListener('click', () => {
 
 downloadBtn.addEventListener('click', () => {
     let downloadName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
-    downloadName += `_${colorName.value === 'custom' ? colorPicker.value : colorName.value}-color`;
+    downloadName += `_${colorPicker.value}-color`;
     downloadName += `_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.jpg`;
 
     const link = document.createElement('a');
@@ -62,13 +72,17 @@ downloadBtn.addEventListener('click', () => {
     link.click();
 });
 
-document.getElementById('imageForm').addEventListener('submit', async (e) => {
+imageForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!imageUpload.files.length) {
         showAlert('画像をアップロードしてください。');
         return;
-    };
+    }
+    if (!colorPicker.value) {
+        showAlert('色を選択してください。');
+        return;
+    }
 
     const form = e.currentTarget;
     
@@ -77,8 +91,7 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
     generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
-    downloadBtn.style.display = 'inline-block';
-    fullscreenBtn.style.display = 'inline-block';
+    helpButtons.style.display = 'flex';
     downloadBtn.href = '';
     processTime.style.display = 'block';
     processTime.innerText = '処理中...';
@@ -99,16 +112,16 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
             method: form.method,
             body: formData
         });
+                
+        const json = await response.json();
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error(json.error);
         }
 
         processTime.innerText = `処理時間: ${(Date.now() - beginTime) / 1000}s`;
-        
-        const json = await response.json();
 
-        const imageURl = json.image_url;
-        const downloadUrl = json.download_url;
+        // const imageURl = json.image_url;
+        // const downloadUrl = json.download_url;
         const base64Image = json.base64_image;
         // generatedImage.src = imageURl;
         // downloadBtn.href = downloadUrl;
@@ -118,10 +131,8 @@ document.getElementById('imageForm').addEventListener('submit', async (e) => {
         downloadBtn.disabled = false;
         fullscreenBtn.disabled = false;
     } catch (error) {
-        showAlert('画像の生成に失敗しました。');
+        showAlert(error.message || '画像の生成に失敗しました。');
         processTime.innerText = '画像の生成に失敗しました。';
-
-        console.error(error);
     }
     submitButton.disabled = false;
     processingMessage.style.visibility = 'hidden';
@@ -139,3 +150,11 @@ function closeAlert() {
     document.getElementById("alert").classList.remove("show");
 }
 
+// 色の選択
+// Select color
+function selectColor(color) {
+    colorPicker.value = color;
+    document.querySelectorAll('.color-item.selected').forEach(item => {
+        item.classList.remove('selected');
+    });
+}
