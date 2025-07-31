@@ -54,6 +54,7 @@ $colorList = colorlist();
             <!-- Begin: Color select part -->
             <div class="form-group">
                 <label>色を選択してください</label>
+                <input type="text" id="colorSearch" placeholder="日塗工の塗料番号で絞り込み" oninput="filterColorList(this.value)" class="filter-input">
                 <!-- Color name select -->
                 <!-- <select id="colorName" name="color_name"> -->
                 <!-- <option value="red">赤 (Red)</option> -->

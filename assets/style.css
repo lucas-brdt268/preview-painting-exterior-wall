@@ -232,10 +232,10 @@ input[type="color"] {
     overflow-y: scroll;
     border: 1px solid hwb(0 80% 20%);
     background-color: #fafafa;
-    height: 300px;
+    max-height: 300px;
 }
 .color-item-wrap {
-    flex: 1 1 12.5%;
+    width: 12.5%;
 }
 .color-item{
     background-color: #fff;
@@ -252,4 +252,14 @@ input[type="color"] {
     border: 4px solid rgb(255, 230, 0);
     padding: 5px;
     box-shadow: 0 0 10px rgba(102, 102, 102, 0.5);
+}
+
+.filter-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }

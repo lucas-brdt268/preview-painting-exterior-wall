@@ -176,6 +176,17 @@ function selectColor(hex, name) {
     });
 }
 
+// 色名でフィルタリング
+// Filter by color name
+function filterColorList(query) {
+    const items = document.querySelectorAll('#colorList .color-item-wrap');
+    query = query.trim().replace('-', '').toLowerCase();
+    items.forEach(item => {
+        const name = item.querySelector('.color-item').textContent.replace('-', '').toLowerCase();
+        item.style.display = name.includes(query) ? '' : 'none';
+    });
+}
+
 // 色の名前を取得
 // Get color name
 async function getColorName(hex) {
