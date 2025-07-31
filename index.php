@@ -72,7 +72,7 @@ $colorList = colorlist();
                     <?php foreach ($colorList as $color): ?>
                         <div class="color-item-wrap">
                             <div class="color-item" style="background-color: <?= $color['hex'] ?>;"
-                                onclick="selectColor('<?= $color['hex'] ?>');event.currentTarget.classList.add('selected');">
+                                onclick="selectColor('<?= $color['hex'] ?>', '<?= $color['name'] ?>');event.currentTarget.classList.add('selected');">
                                 <?= $color['name'] ?>
                             </div>
                         </div>

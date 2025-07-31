@@ -20,6 +20,11 @@ const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
 const processTime = document.getElementById('processTime');
 
+// 定数の定義
+// Define variables
+let originalImageName = '';
+let usedColor = '';
+
 // イベントリスナーを追加する
 // Add event listeners
 fileUploadBtn.addEventListener('click', () => {
@@ -62,8 +67,8 @@ fullscreenBtn.addEventListener('click', () => {
 });
 
 downloadBtn.addEventListener('click', () => {
-    let downloadName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
-    downloadName += `_${colorPicker.value}-color`;
+    let downloadName = originalImageName;
+    downloadName += `_${usedColor}`;
     downloadName += `_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.jpg`;
 
     const link = document.createElement('a');
@@ -85,7 +90,7 @@ imageForm.addEventListener('submit', async (e) => {
     }
 
     const form = e.currentTarget;
-    
+
     submitButton.disabled = true;
     processingMessage.style.visibility = 'visible';
     generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
@@ -112,7 +117,7 @@ imageForm.addEventListener('submit', async (e) => {
             method: form.method,
             body: formData
         });
-                
+
         const json = await response.json();
         if (!response.ok) {
             throw new Error(json.error);
@@ -127,6 +132,9 @@ imageForm.addEventListener('submit', async (e) => {
         // downloadBtn.href = downloadUrl;
         const base64ImageUrl = `data:image/jpg;base64,${base64Image}`;
         generatedImage.src = base64ImageUrl;
+
+        originalImageName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
+        usedColor = colorPicker.getAttribute('data-color-name');
 
         downloadBtn.disabled = false;
         fullscreenBtn.disabled = false;
@@ -152,8 +160,9 @@ function closeAlert() {
 
 // 色の選択
 // Select color
-function selectColor(color) {
-    colorPicker.value = color;
+function selectColor(hex, name) {
+    colorPicker.value = hex;
+    colorPicker.setAttribute('data-color-name', name);
     document.querySelectorAll('.color-item.selected').forEach(item => {
         item.classList.remove('selected');
     });
