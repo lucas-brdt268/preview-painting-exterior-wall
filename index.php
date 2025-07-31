@@ -67,7 +67,7 @@ $colorList = colorlist();
                 <!-- </select> -->
                 <!-- Custom color picker -->
                 <!-- <input type="color" id="colorPicker" name="color_custom"> -->
-                <input type="color" id="colorPicker" name="color_custom" value="" hidden>
+                <!-- <input type="color" id="colorPicker" name="color_custom" value="" hidden> -->
                 <div id="colorList" class="color-list">
                     <?php foreach ($colorList as $color): ?>
                         <div class="color-item-wrap">

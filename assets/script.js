@@ -14,7 +14,7 @@ const previewArea = document.getElementById('previewArea');
 const helpButtons = document.getElementById('helpButtons');
 const downloadBtn = document.getElementById('downloadBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
-const colorPicker = document.getElementById('colorPicker');
+// const colorPicker = document.getElementById('colorPicker');
 // const colorName = document.getElementById('colorName');
 const submitButton = document.getElementById('submitButton');
 const processingMessage = document.getElementById('processingMessage');
@@ -23,6 +23,10 @@ const processTime = document.getElementById('processTime');
 // 定数の定義
 // Define variables
 let originalImageName = '';
+let selectedColor = {
+    hex: '',
+    name: ''
+};
 let usedColor = '';
 
 // イベントリスナーを追加する
@@ -103,9 +107,9 @@ imageForm.addEventListener('submit', async (e) => {
     closeAlert();
 
     const formData = new FormData(form);
-    /* let colorName = form.elements.colorName.value;
-    const colorHex = form.elements.colorPicker.value;
-    if(colorName === 'custom') {
+    // let colorName = form.elements.colorName.value;
+    // const colorHex = form.elements.colorPicker.value;
+   /*  if(colorName === 'custom') {
         colorName = ntc.name(colorHex)[1];
     }
     formData.set('color_name', colorName);
@@ -113,6 +117,8 @@ imageForm.addEventListener('submit', async (e) => {
 
     const beginTime = Date.now();
     try {
+        const colorName = getColorName(selectedColor.hex);
+        formData.set('color', colorName);
         const response = await fetch(form.action, {
             method: form.method,
             body: formData
@@ -134,7 +140,7 @@ imageForm.addEventListener('submit', async (e) => {
         generatedImage.src = base64ImageUrl;
 
         originalImageName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
-        usedColor = colorPicker.getAttribute('data-color-name');
+        usedColor = selectedColor.name;
 
         downloadBtn.disabled = false;
         fullscreenBtn.disabled = false;
@@ -161,13 +167,25 @@ function closeAlert() {
 // 色の選択
 // Select color
 function selectColor(hex, name) {
-    colorPicker.value = hex;
-    colorPicker.setAttribute('data-color-name', name);
+    // colorPicker.value = hex;
+    // colorPicker.setAttribute('data-color-name', name);
+    selectedColor.hex = hex;
+    selectedColor.name = name;
     document.querySelectorAll('.color-item.selected').forEach(item => {
         item.classList.remove('selected');
     });
 }
 
-function getColorName(hex) {
-    
+// 色の名前を取得
+// Get color name
+async function getColorName(hex) {
+    const url = "https://www.thecolorapi.com/id?hex=" + hex.replace(/^#/, '');
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        const data = await response.json();
+    } catch (error) {
+        throw new Error('色分析中にエラーが発生しました。');
+    }
+    // data.name.closet_named_hex
+    return data.name.value;
 }
