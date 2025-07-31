@@ -167,3 +167,7 @@ function selectColor(hex, name) {
         item.classList.remove('selected');
     });
 }
+
+function getColorName(hex) {
+    
+}

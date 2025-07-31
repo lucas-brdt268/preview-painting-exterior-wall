@@ -47,10 +47,12 @@ trace("File id: $fileId");
 
 // フォームから色を取得する
 // Get the color from the form
+$color = $_POST['color'];
+/* 
 $colorName = $_POST['color_name'] ?? 'custom';
 $colorCustom = $_POST['color_custom'] ?? '';
 trace("Color name: $colorName, Custom color: $colorCustom");
-if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
+if ($colorName === 'custom') {
     try{
         $color = colorName($colorCustom) ?? "white";
     } catch (Exception $e) {
@@ -59,7 +61,8 @@ if ($colorName === 'custom'/*  && !empty($colorCustom) */) {
     }
 } else {
     $color = $colorName;
-}
+} 
+*/
 trace("Gotten color name: $color");
 
 // 画像を生成する
