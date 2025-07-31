@@ -169,5 +169,4 @@ function selectColor(hex, name) {
 }
 
 function getColorName(hex) {
-    
 }
