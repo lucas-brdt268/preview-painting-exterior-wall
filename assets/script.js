@@ -117,8 +117,8 @@ imageForm.addEventListener('submit', async (e) => {
 
     const beginTime = Date.now();
     try {
-        const colorName = await getColorName(selectedColor.hex);
-        formData.set('color', colorName);
+        // const colorName = await getColorName(selectedColor.hex);
+        formData.set('color', selectedColor.hex);
         const response = await fetch(form.action, {
             method: form.method,
             body: formData

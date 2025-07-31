@@ -29,7 +29,7 @@ function imggen($imagePath, $color)
     // Replicate API への CURL リクエスト
     // CURL Request to Replicate API
     $apiKey = $REPLICATE_API_KEY;
-    $prompt = "Modify only the exterior wall color of the house to the $color color'.";
+    $prompt = "Paint the exterior wall of the house in the $color";
 
     $data = [
         'input' => [

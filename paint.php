@@ -48,6 +48,7 @@ trace("File id: $fileId");
 // フォームから色を取得する
 // Get the color from the form
 $color = $_POST['color'];
+trace("Color: $color");
 /* 
 $colorName = $_POST['color_name'] ?? 'custom';
 $colorCustom = $_POST['color_custom'] ?? '';
@@ -63,12 +64,19 @@ if ($colorName === 'custom') {
     $color = $colorName;
 } 
 */
-trace("Gotten color: $color");
+try {
+    $colorName = colorName($color) ?? "white"; // 色名を取得, Get the color name
+} catch (Exception $e) {
+    trace('Error(444): ' . $e->getMessage());
+    resJson(['error' => '色分析中にエラーが発生しました。'], 444);
+}
+trace("Color Name: $colorName");
+// resJson(['error' => "Color Name: $colorName"], 444);
 
 // 画像を生成する
 // Generate an image
-try{
-    $imgUrl = imggen($targetPath, $color);
+try {
+    $imgUrl = imggen($targetPath, $colorName);
 } catch (Exception $e) {
     trace('Error(444): ' . $e->getMessage());
     resJson(['error' => '画像の生成中にエラーが発生しました。'], 444);
@@ -79,7 +87,7 @@ try{
 $savePath = $OUTPUT_DIR . $fileId . '.jpg';
 $imageData = file_get_contents($imgUrl);
 checkDir($OUTPUT_DIR);
-try{
+try {
     file_put_contents($savePath, $imageData);
 } catch (Exception $e) {
     trace('Error: ' . $e->getMessage());
