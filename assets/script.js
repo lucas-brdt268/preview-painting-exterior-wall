@@ -88,7 +88,7 @@ imageForm.addEventListener('submit', async (e) => {
         showAlert('画像をアップロードしてください。');
         return;
     }
-    if (!colorPicker.value) {
+    if (!selectedColor.hex) {
         showAlert('色を選択してください。');
         return;
     }
@@ -117,7 +117,7 @@ imageForm.addEventListener('submit', async (e) => {
 
     const beginTime = Date.now();
     try {
-        const colorName = getColorName(selectedColor.hex);
+        const colorName = await getColorName(selectedColor.hex);
         formData.set('color', colorName);
         const response = await fetch(form.action, {
             method: form.method,
@@ -183,9 +183,9 @@ async function getColorName(hex) {
     try {
         const response = await fetch(url, { method: 'GET' });
         const data = await response.json();
+        // data.name.closet_named_hex
+        return data.name.value;
     } catch (error) {
         throw new Error('色分析中にエラーが発生しました。');
     }
-    // data.name.closet_named_hex
-    return data.name.value;
 }

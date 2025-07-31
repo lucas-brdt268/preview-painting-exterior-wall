@@ -63,7 +63,7 @@ if ($colorName === 'custom') {
     $color = $colorName;
 } 
 */
-trace("Gotten color name: $color");
+trace("Gotten color: $color");
 
 // 画像を生成する
 // Generate an image
