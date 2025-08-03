@@ -19,7 +19,7 @@ function colorName($hex)
     $endpoint = 'https://api.openai.com/v1/chat/completions';
 
     $data = [
-        'model' => 'gpt-4',  // or 'gpt-3.5-turbo'
+        'model' => 'gpt-3.5-turbo',  // or 'gpt-3.5-turbo'
         'messages' => [
             [
                 'role' => 'system', 
@@ -27,7 +27,6 @@ function colorName($hex)
             ], [
                 'role' => 'user', 
                 'content' => "Hex color code: $hex." 
-                    . ' Provide a natuaral literary description.'
                     . ' The description format must be like "a neutral, medium-dark gray with a hint of green"'
                     . ' Output style is "Color Name: [literary description]" if succeed, "Failed" if fail.'
             ]

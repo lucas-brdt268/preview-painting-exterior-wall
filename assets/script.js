@@ -44,7 +44,7 @@ imageUpload.addEventListener('change', (event) => {
         reader.onload = (e) => {
             originalImage.src = e.target.result;
             originalImage.style.display = 'block';
-            generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
+            // generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
             generatedImage.style.display = 'block';
         };
         reader.readAsDataURL(file);
@@ -97,7 +97,7 @@ imageForm.addEventListener('submit', async (e) => {
 
     submitButton.disabled = true;
     processingMessage.style.visibility = 'visible';
-    generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
+    // generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
     helpButtons.style.display = 'flex';
