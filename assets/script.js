@@ -11,6 +11,7 @@ const fileName = document.getElementById('fileName');
 const originalImage = document.getElementById('originalImage');
 const generatedImage = document.getElementById('generatedImage');
 const previewArea = document.getElementById('previewArea');
+const usedColorBadge = document.getElementById('usedColor');
 const helpButtons = document.getElementById('helpButtons');
 const downloadBtn = document.getElementById('downloadBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -27,7 +28,10 @@ let selectedColor = {
     hex: '',
     name: ''
 };
-let usedColor = '';
+let usedColor = {
+    hex: '',
+    name: ''
+};
 
 // イベントリスナーを追加する
 // Add event listeners
@@ -44,8 +48,9 @@ imageUpload.addEventListener('change', (event) => {
         reader.onload = (e) => {
             originalImage.src = e.target.result;
             originalImage.style.display = 'block';
+            generatedImage.style.display = 'none';
+            usedColorBadge.style.display = 'none';
             // generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
-            generatedImage.style.display = 'block';
         };
         reader.readAsDataURL(file);
     }
@@ -72,7 +77,7 @@ fullscreenBtn.addEventListener('click', () => {
 
 downloadBtn.addEventListener('click', () => {
     let downloadName = originalImageName;
-    downloadName += `_${usedColor}`;
+    downloadName += `_${usedColor.name}`;
     downloadName += `_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.jpg`;
 
     const link = document.createElement('a');
@@ -97,6 +102,8 @@ imageForm.addEventListener('submit', async (e) => {
 
     submitButton.disabled = true;
     processingMessage.style.visibility = 'visible';
+    generatedImage.style.display = 'none';
+    usedColorBadge.style.display = 'none';
     // generatedImage.src = ASSET_URL + 'preview-placeholder.jpg';
     downloadBtn.disabled = true;
     fullscreenBtn.disabled = true;
@@ -124,9 +131,15 @@ imageForm.addEventListener('submit', async (e) => {
             body: formData
         });
 
-        const json = await response.json();
-        if (!response.ok) {
-            throw new Error(json.error);
+        let json = null;
+        try{
+            json = await response.json();
+        } catch (error) {
+            throw new Error('システムに問題が発生しています。しばらく経ってから再度お試しください。');
+        }
+
+        if(!response.ok && json) {
+            throw new Error(json.error || '画像の生成に失敗しました。');
         }
 
         processTime.innerText = `処理時間: ${(Date.now() - beginTime) / 1000}s`;
@@ -138,16 +151,24 @@ imageForm.addEventListener('submit', async (e) => {
         // downloadBtn.href = downloadUrl;
         const base64ImageUrl = `data:image/jpg;base64,${base64Image}`;
         generatedImage.src = base64ImageUrl;
+        generatedImage.style.display = 'block';
 
         originalImageName = imageUpload.files[0].name.replace(/\.[^/.]+$/, "");
-        usedColor = selectedColor.name;
+        usedColor.name = selectedColor.name;
+        usedColor.hex = selectedColor.hex;
+
+        usedColorBadge.innerText = usedColor.name;
+        usedColorBadge.style.backgroundColor = usedColor.hex;
+        usedColorBadge.style.display = 'inline';
 
         downloadBtn.disabled = false;
         fullscreenBtn.disabled = false;
+
     } catch (error) {
-        showAlert(error.message || '画像の生成に失敗しました。');
+        showAlert(error.message);
         processTime.innerText = '画像の生成に失敗しました。';
     }
+
     submitButton.disabled = false;
     processingMessage.style.visibility = 'hidden';
 });

@@ -14,8 +14,8 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-image: url('https://www.transparenttextures.com/patterns/washi.png');
     background-color: #fdfcf8;
+    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png");
 }
 
 h1 {
@@ -82,6 +82,7 @@ input[type="color"] {
 
 /*** Preview Area ***/
 .preview {
+    position: relative;
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -93,6 +94,16 @@ input[type="color"] {
     max-width: 48%;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#usedColor {
+    display: inline;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-radius: 4px;
+    padding: 3px;
+    font-size: 10px;
 }
 
 /*** Button Basic ***/

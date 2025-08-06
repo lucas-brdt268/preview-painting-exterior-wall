@@ -1,4 +1,5 @@
 <?php
+require_once "./include/request_init.php";
 require_once "./include/helpers.php";
 require_once "./include/pngproc.php";
 require_once "./include/imggen.php";
@@ -10,10 +11,6 @@ require_once "./include/colorname.php";
  * Handles image uploading and processing for wall color simulation
  */
 
-// スクリプトの実行時間を60秒に設定
-// Set script execution time to 60 seconds
-set_time_limit(60);
-
 // リクエストがPOSTリクエストであることを確認する
 // Check if the request is POST
 onlyPost();
@@ -22,8 +19,8 @@ trace("Start handling request");
 // 元の画像をアップロードする
 // Upload the original image
 if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-    trace('Error(444): Image upload failed');
-    resJson(['error' => '画像のアップロードに失敗しました'], 444);
+    trace('Error(500): Image upload failed');
+    resJson(['error' => '画像のアップロードに失敗しました'], 500);
 }
 $tempName = $_FILES['image']['tmp_name'];
 $fileName = basename($_FILES['image']['name']);
@@ -34,14 +31,14 @@ $targetName = $UPLOAD_DIR . $fileId;
 $targetPath = "$targetName.$fileType";
 
 if ($fileSizeKB > 5120) { // 5MBまでに制限, Limit to 5MB
-    trace('Error(444): Image size exceeds the limit of 5MB');
-    resJson(['error' => '画像サイズが5MBの制限を超えています'], 444);
+    trace('Error(500): Image size exceeds the limit of 5MB');
+    resJson(['error' => '画像サイズが5MBの制限を超えています'], 500);
 }
 
 checkDir($UPLOAD_DIR);
 if (!move_uploaded_file($tempName, $targetPath)) {
-    trace('Error(444): Failed to save uploaded image');
-    resJson(['error' => 'アップロードした画像を保存できませんでした'], 444);
+    trace('Error(500): Failed to save uploaded image');
+    resJson(['error' => 'アップロードした画像を保存できませんでした'], 500);
 }
 trace("File id: $fileId");
 
@@ -57,8 +54,8 @@ if ($colorName === 'custom') {
     try{
         $color = colorName($colorCustom) ?? "white";
     } catch (Exception $e) {
-        trace('Error(444): ' . $e->getMessage());
-        resJson(['error' => '色分析中にエラーが発生しました。'], 444);
+        trace('Error(500): ' . $e->getMessage());
+        resJson(['error' => '色分析中にエラーが発生しました。'], 500);
     }
 } else {
     $color = $colorName;
@@ -67,19 +64,20 @@ if ($colorName === 'custom') {
 try {
     $colorName = colorName($color) ?? "white"; // 色名を取得, Get the color name
 } catch (Exception $e) {
-    trace('Error(444): ' . $e->getMessage());
-    resJson(['error' => '色分析中にエラーが発生しました。'], 444);
+    trace('Error(500): ' . $e->getMessage());
+    resJson(['error' => '色分析中にエラーが発生しました。'], 500);
 }
 trace("Color Name: $colorName");
-// resJson(['error' => "Color Name: $colorName"], 444);
+// resJson(['error' => "Color Name: $colorName"], 500);
 
 // 画像を生成する
 // Generate an image
 try {
     $imgUrl = imggen($targetPath, $colorName);
 } catch (Exception $e) {
-    trace('Error(444): ' . $e->getMessage());
-    resJson(['error' => '画像の生成中にエラーが発生しました。'], 444);
+    trace('Error(500): ' . $e->getMessage());
+    // resJson(['error' => '画像の生成中にエラーが発生しました。'], 500);
+    resJson(['error' => 'システムに問題が発生しています。しばらく経ってから再度お試しください。'], 500);
 }
 
 // 画像の保存

@@ -6,3 +6,4 @@ $UPLOAD_DIR = "./uploads";
 $OUTPUT_DIR = "./output";
 $LOG_DIR = './logs/';
 $CSV_DIR = './csv/';
+$TIMEOUT = 60;

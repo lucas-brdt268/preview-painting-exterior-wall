@@ -29,7 +29,7 @@ function imggen($imagePath, $color)
     // Replicate API への CURL リクエスト
     // CURL Request to Replicate API
     $apiKey = $REPLICATE_API_KEY;
-    $prompt = "Paint the exterior wall of the house in the $color";
+    $prompt = "Paint the exterior wall of the house lightly in $color";
 
     $data = [
         'input' => [
@@ -41,6 +41,9 @@ function imggen($imagePath, $color)
         ]
     ];
 
+    global $TIMEOUT, $__start_time;
+    $remainTimeout = $TIMEOUT - $__start_time;
+
     $curl = curl_init();
     curl_setopt_array($curl, [
         CURLOPT_URL => 'https://api.replicate.com/v1/models/black-forest-labs/flux-kontext-pro/predictions',
@@ -51,7 +54,7 @@ function imggen($imagePath, $color)
         ],
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 60,
+        CURLOPT_TIMEOUT => $remainTimeout,
         CURLOPT_CONNECTTIMEOUT => 10,
     ]);
     $response = curl_exec($curl);

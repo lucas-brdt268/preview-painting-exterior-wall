@@ -19,7 +19,9 @@ function colorName($hex)
     $endpoint = 'https://api.openai.com/v1/chat/completions';
 
     $data = [
-        'model' => 'gpt-3.5-turbo',  // or 'gpt-3.5-turbo'
+        'model' => 'gpt-3.5-turbo',
+        // 'model' => 'gpt-4',  // or 'gpt-3.5-turbo'
+
         'messages' => [
             [
                 'role' => 'system', 
@@ -27,7 +29,7 @@ function colorName($hex)
             ], [
                 'role' => 'user', 
                 'content' => "Hex color code: $hex." 
-                    . ' The description format must be like "a neutral, medium-dark gray with a hint of green"'
+                    . ' The description format must be like "a neutral, medium-dark gray with a hint of green" or "a very dark, low-saturation color with a greenish-brown undertone"'
                     . ' Output style is "Color Name: [literary description]" if succeed, "Failed" if fail.'
             ]
         ],
@@ -45,6 +47,7 @@ function colorName($hex)
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
     curl_setopt($ch, CURLOPT_TIMEOUT, 30); // タイムアウトを30秒に設定
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // 接続タイムアウトを10秒に設定
 

@@ -1,4 +1,5 @@
 <?php
+require_once "./include/request_init.php";
 require_once "./include/helpers.php";
 require_once "./include/colorlist.php";
 
@@ -99,6 +100,7 @@ $colorList = colorlist();
         <div class="preview" id="previewArea">
             <img id="originalImage" src="" alt="元画像" style="display: none;">
             <img id="generatedImage" src="" alt="プレビュー画像" style="display: none;">
+            <span id="usedColor" style="display: none;"></span>
         </div>
         <div id="processTime" style="display: none;">処理時間: 0s</div>
         <!-- End: Preview area with original -->
